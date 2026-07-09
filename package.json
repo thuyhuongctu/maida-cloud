@@ -1,0 +1,35 @@
+{
+  "name": "maida-cloud",
+  "version": "0.1.0",
+  "private": true,
+  "description": "M-AIDA Cloud: SaaS platform for AI-assisted effect-size extraction and meta-analysis data management.",
+  "author": "Do Thuy Huong",
+  "license": "UNLICENSED",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.19.0",
+    "next": "^14.2.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "unpdf": "^0.11.0",
+    "zod": "^3.23.8",
+    "bcryptjs": "^2.4.3",
+    "jose": "^5.9.0",
+    "stripe": "^16.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/react": "^18.3.0",
+    "prisma": "^5.19.0",
+    "typescript": "^5.5.0",
+    "@types/bcryptjs": "^2.4.6"
+  }
+}

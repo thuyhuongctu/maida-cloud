@@ -1,0 +1,108 @@
+// Data model for M-AIDA Cloud.
+// Replaces the single-user in-memory store of the research tool with a
+// persistent, multi-tenant schema: organizations own projects, projects
+// hold extracted study records, and each record follows the verify then
+// lock workflow before it can enter an analysis export.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  OWNER
+  REVIEWER
+  VIEWER
+}
+
+enum Plan {
+  FREE
+  PRO
+  TEAM
+}
+
+model User {
+  id           String       @id @default(cuid())
+  email        String       @unique
+  name         String?
+  passwordHash String
+  createdAt    DateTime     @default(now())
+  memberships  Membership[]
+
+  @@map("users")
+}
+
+model Organization {
+  id                   String       @id @default(cuid())
+  name                 String
+  plan                 Plan         @default(FREE)
+  extractionsUsed      Int          @default(0)
+  periodStart          DateTime     @default(now())
+  stripeCustomerId     String?      @unique
+  stripeSubscriptionId String?
+  createdAt            DateTime     @default(now())
+  memberships          Membership[]
+  projects             Project[]
+
+  @@map("organizations")
+}
+
+model Membership {
+  id             String       @id @default(cuid())
+  role           Role         @default(REVIEWER)
+  userId         String
+  organizationId String
+  user           User         @relation(fields: [userId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  @@unique([userId, organizationId])
+  @@map("memberships")
+}
+
+model Project {
+  id             String       @id @default(cuid())
+  name           String
+  field          String       @default("general")
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  studies        Study[]
+  createdAt      DateTime     @default(now())
+
+  @@index([organizationId])
+  @@map("projects")
+}
+
+model Study {
+  id                    String    @id @default(cuid())
+  projectId             String
+  project               Project   @relation(fields: [projectId], references: [id])
+
+  paperTitle            String    @default("")
+  authors               String    @default("")
+  year                  Int       @default(0)
+  country               String    @default("")
+
+  sampleN               Int?
+  effectR               Float?
+  effectT               Float?
+  effectBeta            Float?
+  effectDf              Int?
+  pValue                Float?
+  ciLower               Float?
+  ciUpper               Float?
+
+  extractionConfidence  Float     @default(0)
+  requiresVerification  Boolean   @default(true)
+  piLocked              Boolean   @default(false)
+  piNotes               String    @default("")
+
+  extractedAt           DateTime  @default(now())
+  lockedAt              DateTime?
+
+  @@index([projectId])
+  @@map("studies")
+}
