@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use M-AIDA Cloud, please cite it as below."
+title: "M-AIDA Cloud"
+type: software
+authors:
+  - family-names: "Do"
+    given-names: "Thuy Huong"
+    email: "thuyhuongctu@gmail.com"
+    orcid: "https://orcid.org/0000-0002-7711-2487"
+    affiliation: "Can Tho University (PhD Candidate)"
+  - family-names: "Phan"
+    given-names: "Anh Tu"
+    email: "patu@ctu.edu.vn"
+    orcid: "https://orcid.org/0000-0003-0667-3137"
+    affiliation: "Can Tho University"
+repository-code: "https://github.com/thuyhuongctu-cell/maida-cloud"
