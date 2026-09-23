@@ -8,7 +8,7 @@ export const dict = {
     tagline: "Meta-Analysis Intelligent Data Assistant",
     heroTitle: "Effect-size extraction, verified by humans.",
     heroBody:
-      "M-AIDA Cloud turns hundreds of hours of manual coding into a few hours. Upload an article, review the statistics it proposes, then lock the record before it enters your analysis dataset.",
+      "Upload an article and M-AIDA Cloud proposes the statistics needed for an effect size. You review each value, then lock the record before it enters your analysis dataset.",
     ctaDashboard: "Open dashboard",
     ctaSource: "Original release",
     dashTitle: "Dashboard",
@@ -37,6 +37,12 @@ export const dict = {
     save: "Save changes",
     saved: "Saved",
     lockConfirm: "Locking is permanent. Continue?",
+    lockYes: "Lock permanently",
+    cancel: "Cancel",
+    saveFailed: "Could not save this record. Try again.",
+    lockFailed: "Could not lock this record. Try again.",
+    working: "Working",
+    usageLabel: "Monthly extraction usage",
     empty: "No records yet. Upload an article to begin.",
     signIn: "Sign in",
     signUp: "Create account",
@@ -61,7 +67,7 @@ export const dict = {
     tagline: "Trợ lý Dữ liệu Phân tích Tổng hợp",
     heroTitle: "Trích xuất cỡ ảnh hưởng, được con người kiểm chứng.",
     heroBody:
-      "M-AIDA Cloud biến hàng trăm giờ mã hóa thủ công thành vài giờ. Tải lên tài liệu, kiểm chứng các số liệu hệ thống đề xuất, rồi khóa bản ghi trước khi đưa vào bộ dữ liệu phân tích.",
+      "Tải lên một bài báo, M-AIDA Cloud đề xuất các số liệu cần thiết để tính cỡ ảnh hưởng. Bạn kiểm chứng từng giá trị, rồi khóa bản ghi trước khi đưa vào bộ dữ liệu phân tích.",
     ctaDashboard: "Vào bảng điều khiển",
     ctaSource: "Công bố gốc",
     dashTitle: "Bảng điều khiển",
@@ -90,6 +96,12 @@ export const dict = {
     save: "Lưu thay đổi",
     saved: "Đã lưu",
     lockConfirm: "Khóa là vĩnh viễn. Tiếp tục?",
+    lockYes: "Khóa vĩnh viễn",
+    cancel: "Hủy",
+    saveFailed: "Không lưu được bản ghi. Vui lòng thử lại.",
+    lockFailed: "Không khóa được bản ghi. Vui lòng thử lại.",
+    working: "Đang xử lý",
+    usageLabel: "Mức sử dụng trích xuất trong tháng",
     empty: "Chưa có bản ghi. Tải lên tài liệu để bắt đầu.",
     signIn: "Đăng nhập",
     signUp: "Tạo tài khoản",
@@ -111,4 +123,4 @@ export const dict = {
   },
 } as const;
 
-export type Dict = (typeof dict)["en"];
+export type Dict = { [K in keyof (typeof dict)["en"]]: string };

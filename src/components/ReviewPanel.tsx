@@ -17,6 +17,8 @@ export function ReviewPanel({ initial }: { initial: StudyRow[] }) {
   const [rows, setRows] = useState<StudyRow[]>(initial);
   const [openId, setOpenId] = useState<string | null>(null);
   const [draft, setDraft] = useState<Record<string, number | null>>({});
+  const [confirmId, setConfirmId] = useState<string | null>(null);
+  const [error, setError] = useState<{ id: string; message: string } | null>(null);
 
   function upsert(row: StudyRow) {
     setRows((prev) => {
@@ -28,6 +30,8 @@ export function ReviewPanel({ initial }: { initial: StudyRow[] }) {
 
   function startReview(row: StudyRow) {
     setOpenId(row.id);
+    setConfirmId(null);
+    setError(null);
     setDraft({
       effectR: row.effectR, effectT: row.effectT ?? null,
       effectDf: row.effectDf ?? null, effectBeta: row.effectBeta ?? null,
@@ -45,24 +49,33 @@ export function ReviewPanel({ initial }: { initial: StudyRow[] }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ fieldOverrides: overrides, approved, notes: "" }),
     });
-    const json = await res.json();
-    if (res.ok) { upsert(json.data as StudyRow); if (approved) setOpenId(null); }
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok) { setError({ id, message: json.error ?? t.saveFailed }); return; }
+    setError(null);
+    upsert(json.data as StudyRow);
+    if (approved) setOpenId(null);
   }
 
   async function lock(id: string) {
-    if (!window.confirm(t.lockConfirm)) return;
     const res = await fetch(`/api/studies/${id}/lock`, { method: "POST" });
-    const json = await res.json();
-    if (res.ok) { upsert(json.data as StudyRow); setOpenId(null); }
+    const json = await res.json().catch(() => ({}));
+    setConfirmId(null);
+    if (!res.ok) { setError({ id, message: json.error ?? t.lockFailed }); return; }
+    setError(null);
+    upsert(json.data as StudyRow);
+    setOpenId(null);
   }
 
   return (
     <div className="panel">
+      <header className="dash-head">
+        <h1>{t.dashTitle}</h1>
+        <p className="muted">{rows.length} {t.recent}.</p>
+      </header>
+
       <UploadCard onCreated={upsert} />
 
       <section className="dash">
-        <h1>{t.dashTitle}</h1>
-        <p className="muted">{rows.length} {t.recent}.</p>
         {rows.length === 0 ? (
           <p className="empty">{t.empty}</p>
         ) : (
@@ -79,8 +92,11 @@ export function ReviewPanel({ initial }: { initial: StudyRow[] }) {
                   <FragmentRow
                     key={s.id}
                     s={s} t={t} open={openId === s.id} draft={draft} setDraft={setDraft}
+                    confirming={confirmId === s.id} error={error?.id === s.id ? error.message : ""}
                     onReview={() => startReview(s)} onClose={() => setOpenId(null)}
-                    onSave={() => save(s.id, false)} onApprove={() => save(s.id, true)} onLock={() => lock(s.id)}
+                    onSave={() => save(s.id, false)} onApprove={() => save(s.id, true)}
+                    onAskLock={() => setConfirmId(s.id)} onCancelLock={() => setConfirmId(null)}
+                    onLock={() => lock(s.id)}
                   />
                 ))}
               </tbody>
@@ -95,7 +111,9 @@ export function ReviewPanel({ initial }: { initial: StudyRow[] }) {
 function FragmentRow(props: {
   s: StudyRow; t: Record<string, string>; open: boolean;
   draft: Record<string, number | null>; setDraft: (d: Record<string, number | null>) => void;
-  onReview: () => void; onClose: () => void; onSave: () => void; onApprove: () => void; onLock: () => void;
+  confirming: boolean; error: string;
+  onReview: () => void; onClose: () => void; onSave: () => void; onApprove: () => void;
+  onAskLock: () => void; onCancelLock: () => void; onLock: () => void;
 }) {
   const { s, t, open, draft, setDraft } = props;
   const status = s.piLocked ? "locked" : s.requiresVerification ? "review" : "approved";
@@ -133,11 +151,20 @@ function FragmentRow(props: {
                 </label>
               ))}
             </div>
-            <div className="actions">
-              <button className="btn small" onClick={props.onSave}>{t.save}</button>
-              <button className="btn small ghost" onClick={props.onApprove}>{t.approve}</button>
-              <button className="btn small lock" onClick={props.onLock} disabled={s.requiresVerification}>{t.lock}</button>
-            </div>
+            {props.confirming ? (
+              <div className="confirm" role="group" aria-label={t.lockConfirm}>
+                <span>{t.lockConfirm}</span>
+                <button className="btn small lock" onClick={props.onLock}>{t.lockYes}</button>
+                <button className="btn small ghost" onClick={props.onCancelLock}>{t.cancel}</button>
+              </div>
+            ) : (
+              <div className="actions">
+                <button className="btn small" onClick={props.onSave}>{t.save}</button>
+                <button className="btn small ghost" onClick={props.onApprove}>{t.approve}</button>
+                <button className="btn small lock" onClick={props.onAskLock} disabled={s.requiresVerification}>{t.lock}</button>
+              </div>
+            )}
+            {props.error && <p className="err" role="alert">{props.error}</p>}
           </td>
         </tr>
       )}
