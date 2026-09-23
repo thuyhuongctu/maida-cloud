@@ -39,10 +39,13 @@ export function BillingPanel({ usage, plans, orgName }: { usage: Usage; plans: P
           <span>{t.currentPlan}: <b>{usage.plan}</b></span>
           <span className="mono">{usage.used} / {usage.quota} {t.thisMonth}</span>
         </div>
-        <div className="meter"><span style={{ width: pct + "%" }} /></div>
+        <div className="meter" role="progressbar" aria-label={t.usageLabel}
+          aria-valuemin={0} aria-valuemax={usage.quota} aria-valuenow={Math.min(usage.used, usage.quota)}>
+          <span style={{ width: pct + "%" }} />
+        </div>
       </div>
 
-      {error && <p className="err">{error}</p>}
+      {error && <p className="err" role="alert">{error}</p>}
 
       <div className="plans">
         {plans.map((p) => (
@@ -55,7 +58,7 @@ export function BillingPanel({ usage, plans, orgName }: { usage: Usage; plans: P
               <span className="muted small">{t.freeLabel}</span>
             ) : (
               <button className="btn small" disabled={busy === p.key} onClick={() => upgrade(p.key)}>
-                {busy === p.key ? "..." : t.upgrade}
+                {busy === p.key ? t.working + "…" : t.upgrade}
               </button>
             )}
           </div>

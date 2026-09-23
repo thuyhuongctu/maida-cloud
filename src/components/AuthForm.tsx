@@ -40,7 +40,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
   return (
     <main className="auth">
       <h1>{mode === "login" ? t.signIn : t.signUp}</h1>
-      <form onSubmit={submit}>
+      <form onSubmit={submit} aria-busy={busy}>
         {mode === "register" && (
           <>
             <label><span>{t.fldName}</span>
@@ -54,9 +54,9 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
         <label><span>{t.fldPassword}</span>
           <input type="password" value={password} minLength={mode === "register" ? 8 : undefined}
             onChange={(e) => setPassword(e.target.value)} required /></label>
-        {error && <p className="err">{error}</p>}
+        {error && <p className="err" role="alert">{error}</p>}
         <button className="btn" type="submit" disabled={busy}>
-          {busy ? "..." : mode === "login" ? t.signIn : t.signUp}
+          {busy ? t.working + "…" : mode === "login" ? t.signIn : t.signUp}
         </button>
       </form>
       <p className="alt">

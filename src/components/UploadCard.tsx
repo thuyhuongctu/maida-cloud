@@ -35,7 +35,7 @@ export function UploadCard({ onCreated }: { onCreated: (row: StudyRow) => void }
   }
 
   return (
-    <form className="upload" onSubmit={submit}>
+    <form className="upload" onSubmit={submit} aria-busy={busy}>
       <h2>{t.upload}</h2>
       <p className="muted">{t.dropHint}</p>
       <div className="row">
@@ -45,9 +45,9 @@ export function UploadCard({ onCreated }: { onCreated: (row: StudyRow) => void }
         <input type="text" placeholder={t.fldTitle} value={title} onChange={(e) => setTitle(e.target.value)} />
         <input type="number" placeholder={t.fldYear} value={year} onChange={(e) => setYear(e.target.value)} />
       </div>
-      {error && <p className="err">{error}</p>}
+      {error && <p className="err" role="alert">{error}</p>}
       <button className="btn" type="submit" disabled={busy || !file}>
-        {busy ? t.extracting + "..." : t.extract}
+        {busy ? t.extracting + "…" : t.extract}
       </button>
     </form>
   );
