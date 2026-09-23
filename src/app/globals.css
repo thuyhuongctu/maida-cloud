@@ -1,3 +1,8 @@
+/* Hallmark · macrostructure: Narrative Workflow · genre: editorial · tone: austere, scholarly
+ * theme: project system (preserved) · anchor hue: teal (--brand) · accent: amber, lock action only
+ * nav: N1a (two real destinations) · footer: Ft2 inline rule · enrichment: none (typography only)
+ * pre-emit critique: P4 H4 E4 S5 R5 V4
+ */
 :root {
   --bg: #f6f7f9;
   --surface: #ffffff;
@@ -104,7 +109,8 @@ h1 { font-family: var(--font-display); font-weight: 600; letter-spacing: -0.01em
 .lang button.on { background: var(--brand); color: var(--on-brand); }
 .lang button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-.landing { max-width: 52rem; margin: 0 auto; padding: 4.5rem 1.5rem 5rem; }
+.landing { max-width: 60rem; margin: 0 auto; padding: 4.5rem 1.5rem 4rem; }
+.landing-hero { max-width: 44rem; }
 .eyebrow {
   font-family: var(--font-mono);
   text-transform: uppercase;
@@ -130,7 +136,75 @@ h1 { font-family: var(--font-display); font-weight: 600; letter-spacing: -0.01em
 .btn:focus-visible, .link:focus-visible, .auth .alt a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn.ghost { background: transparent; color: var(--brand); border: 1px solid var(--line); }
 .btn.ghost:hover { background: var(--brand-soft); border-color: var(--brand); }
-.affil { margin-top: 2.4rem; font-family: var(--font-mono); font-size: 0.78rem; color: var(--faint); }
+.affil { margin: 0; font-family: var(--font-mono); font-size: 0.78rem; color: var(--faint); }
+.affil a { color: var(--muted); text-underline-offset: 3px; border-radius: 4px; }
+.affil a:hover { color: var(--ink); }
+.affil a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Narrative Workflow: three ordinal stages, text beside a small working proof */
+.stages { list-style: none; margin: 5rem 0 0; padding: 0; }
+.stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 1.5rem 3rem;
+  padding: 2.5rem 0;
+  border-top: 2px solid var(--ink);
+}
+.stage + .stage { border-top-width: 1px; border-top-color: var(--line); }
+.stage-num { display: block; font-family: var(--font-mono); font-size: 0.8rem; color: var(--brand); font-variant-numeric: tabular-nums; }
+.stage h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.6rem, 3.6vw, 2.2rem);
+  line-height: 1.15;
+  margin: 0.35rem 0 0.8rem;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.stage p { margin: 0; color: var(--muted); max-width: 52ch; }
+.stage-proof {
+  margin: 0;
+  min-width: 0;
+  overflow-x: auto;
+  align-self: start;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1.2rem 1.3rem;
+}
+.stage-proof figcaption { margin-top: 0.8rem; font-family: var(--font-mono); font-size: 0.75rem; color: var(--faint); }
+.calc { display: flex; gap: 1.6rem; margin: 0; font-variant-numeric: tabular-nums; }
+.calc div { display: flex; flex-direction: column; gap: 0.15rem; }
+.calc dt { font-family: var(--font-mono); font-size: 0.75rem; color: var(--faint); }
+.calc dd { margin: 0; font-size: 1.35rem; font-weight: 600; color: var(--ink); }
+.calc .calc-out { padding-left: 1.6rem; border-left: 1px solid var(--line); }
+.calc .calc-out dd { color: var(--brand); }
+.formula { margin: 0.9rem 0 0; font-family: var(--font-mono); font-size: 0.85rem; color: var(--ink); }
+.stage p.formula { color: var(--ink); }
+table.mini { min-width: 0; font-size: 0.88rem; }
+table.mini th, table.mini td { padding: 0.5rem 0.6rem; }
+table.mini th:first-child, table.mini td:first-child { padding-left: 0; }
+table.mini thead th { background: transparent; }
+.locked-line { display: flex; align-items: center; gap: 0.9rem; font-size: 1.1rem; font-weight: 600; }
+.stage p.locked-line { color: var(--ink); }
+.locked-line .num { font-variant-numeric: tabular-nums; }
+.example-note { margin: 0; padding-top: 1.2rem; border-top: 1px solid var(--line); font-size: 0.85rem; color: var(--faint); }
+.landing-foot {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
+  gap: 1rem 2rem; margin-top: 4rem; padding-top: 1.5rem; border-top: 2px solid var(--ink);
+}
+@media (max-width: 720px) {
+  .stages { margin-top: 3.5rem; }
+  .stage { grid-template-columns: minmax(0, 1fr); padding: 2rem 0; }
+  .calc { gap: 1.1rem; }
+  .calc .calc-out { padding-left: 1.1rem; }
+}
+@media (max-width: 420px) {
+  .stage-proof { padding: 1rem; }
+  table.mini { font-size: 0.8rem; }
+  table.mini th, table.mini td { padding: 0.45rem 0.3rem; }
+  table.mini thead th { font-size: 0.62rem; letter-spacing: 0.03em; }
+}
 
 .dash { max-width: 60rem; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
 .dash h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); margin: 0 0 0.3rem; }
